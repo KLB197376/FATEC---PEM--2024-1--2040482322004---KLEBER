@@ -1,0 +1,157 @@
+Estrutura de Pastas
+css
+Copiar código
+chess/
+│
+├── include/
+│   ├── board.h
+│   ├── game.h
+│   └── pieces.h
+│
+├── src/
+│   ├── board.c
+│   ├── game.c
+│   └── pieces.c
+│
+└── main.c
+Conteúdo dos Arquivos
+include/board.h
+c
+Copiar código
+#ifndef BOARD_H
+#define BOARD_H
+
+#define LINHAS 8
+#define COLUNAS 8
+
+void inicializar_tabuleiro(char tabuleiro[LINHAS][COLUNAS]);
+void imprimir_tabuleiro(char tabuleiro[LINHAS][COLUNAS]);
+
+#endif // BOARD_H
+include/game.h
+c
+Copiar código
+#ifndef GAME_H
+#define GAME_H
+
+void simular_jogo(char tabuleiro[LINHAS][COLUNAS]);
+
+#endif // GAME_H
+include/pieces.h
+c
+Copiar código
+#ifndef PIECES_H
+#define PIECES_H
+
+void inicializar_pecas(char tabuleiro[LINHAS][COLUNAS]);
+
+#endif // PIECES_H
+src/board.c
+c
+Copiar código
+#include <stdio.h>
+#include "board.h"
+
+void inicializar_tabuleiro(char tabuleiro[LINHAS][COLUNAS]) {
+    for (int linha = 0; linha < LINHAS; linha++) {
+        for (int coluna = 0; coluna < COLUNAS; coluna++) {
+            tabuleiro[linha][coluna] = ' ';
+        }
+    }
+}
+
+void imprimir_tabuleiro(char tabuleiro[LINHAS][COLUNAS]) {
+    for (int linha = 0; linha < LINHAS; linha++) {
+        for (int coluna = 0; coluna < COLUNAS; coluna++) {
+            printf("%c ", tabuleiro[linha][coluna]);
+        }
+        printf("\n");
+    }
+}
+src/game.c
+c
+Copiar código
+#include <stdio.h>
+#include "board.h"
+#include "game.h"
+#include "pieces.h"
+
+void simular_jogo(char tabuleiro[LINHAS][COLUNAS]) {
+    printf("Tabuleiro Inicial:\n");
+    imprimir_tabuleiro(tabuleiro);
+    printf("\n");
+
+    printf("Jogada #1:\n");
+    printf("Brancas jogam Peão do Rei (e2 -> e4)\n");
+    tabuleiro[3][4] = 'P'; // Movimento do Peão branco
+    tabuleiro[1][4] = ' '; // Remoção do Peão branco da posição anterior
+    imprimir_tabuleiro(tabuleiro);
+    printf("\n");
+
+    printf("Pretas jogam Peão do Rei (e7 -> e5)\n");
+    tabuleiro[4][4] = 'p'; // Movimento do Peão preto
+    tabuleiro[6][4] = ' '; // Remoção do Peão preto da posição anterior
+    imprimir_tabuleiro(tabuleiro);
+    printf("\n\n");
+
+    // Continuação das jogadas, com lógica semelhante às anteriores...
+}
+src/pieces.c
+c
+Copiar código
+#include "board.h"
+#include "pieces.h"
+
+void inicializar_pecas(char tabuleiro[LINHAS][COLUNAS]) {
+    for (int linha = 0; linha < LINHAS; linha++) {
+        for (int coluna = 0; coluna < COLUNAS; coluna++) {
+            if (linha == 0 || linha == 1) {
+                tabuleiro[linha][coluna] = 'B'; // Peças brancas nas primeiras duas linhas
+            } else if (linha == 6 || linha == 7) {
+                tabuleiro[linha][coluna] = 'P'; // Peças pretas nas últimas duas linhas
+            } else {
+                tabuleiro[linha][coluna] = ' '; // Casa vazia
+            }
+
+            if (linha == 1 || linha == 6) {
+                tabuleiro[linha][coluna] = 'P'; // Peão
+            } else if ((linha == 0 || linha == 7) && (coluna == 0 || coluna == 7)) {
+                tabuleiro[linha][coluna] = 'T'; // Torre
+            } else if ((linha == 0 || linha == 7) && (coluna == 1 || coluna == 6)) {
+                tabuleiro[linha][coluna] = 'C'; // Cavalo
+            } else if ((linha == 0 || linha == 7) && (coluna == 2 || coluna == 5)) {
+                tabuleiro[linha][coluna] = 'B'; // Bispo
+            } else if ((linha == 0 || linha == 7) && (coluna == 3)) {
+                tabuleiro[linha][coluna] = 'D'; // Dama
+            } else if ((linha == 0 || linha == 7) && (coluna == 4)) {
+                tabuleiro[linha][coluna] = 'R'; // Rei
+            }
+        }
+    }
+}
+main.c
+c
+Copiar código
+#include <stdio.h>
+#include "board.h"
+#include "game.h"
+#include "pieces.h"
+
+int main() {
+    char tabuleiro[LINHAS][COLUNAS];
+
+    inicializar_tabuleiro(tabuleiro);
+    inicializar_pecas(tabuleiro);
+
+    simular_jogo(tabuleiro);
+
+    return 0;
+}
+Compilação e Execução
+Para compilar e executar o programa, você pode usar os seguintes comandos:
+
+sh
+Copiar código
+gcc -o chess main.c src/board.c src/game.c src/pieces.c
+./chess
+
